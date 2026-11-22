@@ -1,36 +1,15 @@
-// Telegram destination links (50-50 random split on every button click).
-const CTA_LINKS = [
-  "https://t.me/+GASgZuFAtwEzYTI0",
-  "https://t.me/+qnsFrCm0ONEyMWJk",
-];
-
-function getRandomCtaLink() {
-  return CTA_LINKS[Math.floor(Math.random() * CTA_LINKS.length)];
-}
-
+// Track Join Now clicks (each button uses its own fixed link from HTML).
 document.addEventListener("DOMContentLoaded", () => {
   const joinButtons = document.querySelectorAll("[data-cta-btn]");
 
   joinButtons.forEach((btn) => {
-    // Set an initial random href as fallback.
-    btn.href = getRandomCtaLink();
-
-    btn.addEventListener("click", (e) => {
-      const targetUrl = getRandomCtaLink();
-      btn.href = targetUrl;
-
+    btn.addEventListener("click", () => {
       // Placeholder hook for analytics (GA4 / Meta Pixel) if added later.
       if (typeof window.gtag === "function") {
-        window.gtag("event", "join_now_click", { destination: targetUrl });
+        window.gtag("event", "join_now_click", { destination: btn.href });
       }
       if (typeof window.fbq === "function") {
         window.fbq("track", "Lead");
-      }
-
-      // Let modifier clicks (Ctrl/Cmd/Shift) open normally in a new tab.
-      if (!e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey) {
-        e.preventDefault();
-        window.location.href = targetUrl;
       }
     });
   });

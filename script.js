@@ -1,21 +1,15 @@
-// Track Join Now clicks (each button uses its own fixed link from HTML).
+// Track Join Now clicks (all CTAs share the same link and Meta Pixel).
 document.addEventListener("DOMContentLoaded", () => {
   const joinButtons = document.querySelectorAll("[data-cta-btn]");
 
   joinButtons.forEach((btn) => {
     btn.addEventListener("click", (e) => {
-      // Analytics hooks (GA4 / Meta Pixel — fires Lead to all initialized pixels).
       if (typeof window.gtag === "function") {
         window.gtag("event", "join_now_click", { destination: btn.href });
       }
 
       if (typeof window.fbq === "function") {
-        const pixelId = btn.dataset.pixelId;
-        if (pixelId) {
-          window.fbq("trackSingle", pixelId, "Lead");
-        } else {
-          window.fbq("track", "Lead");
-        }
+        window.fbq("track", "Lead");
 
         // Brief delay on normal clicks so Meta Pixel beacon finishes before leaving page.
         if (!e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey) {
